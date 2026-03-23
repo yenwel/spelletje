@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spelletje op GitHub Pages</title>
+    <meta
+      name="description"
+      content="Een kleine browsergame die volledig statisch is en direct op GitHub Pages kan worden gehost."
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="layout">
+      <section class="panel intro">
+        <p class="eyebrow">Statische browsergame</p>
+        <h1>Vang de sterren</h1>
+        <p>
+          Beweeg met <strong>← →</strong> of <strong>A / D</strong> en vang zoveel
+          mogelijk sterren binnen 30 seconden. Mis je een ster, dan verlies je een leven.
+        </p>
+        <div class="hud">
+          <div>
+            <span class="label">Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div>
+            <span class="label">Levens</span>
+            <strong id="lives">3</strong>
+          </div>
+          <div>
+            <span class="label">Tijd</span>
+            <strong id="time">30</strong>
+          </div>
+        </div>
+        <button id="startButton" class="primary-button">Start spel</button>
+        <p id="message" class="message">Klik op start om te beginnen.</p>
+      </section>
+
+      <section class="panel game-panel">
+        <div id="game" class="game" aria-label="Spelveld">
+          <div id="player" class="player" aria-hidden="true"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
