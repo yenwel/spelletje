@@ -156,8 +156,9 @@ p {
   filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.45));
 }
 
-.player::before {
-  content: "🧚‍♀️🦄";
+.player-emoji {
+  display: block;
+  transform: translateY(1px);
 }
 
 .star {
