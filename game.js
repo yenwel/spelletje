@@ -5,6 +5,8 @@ const livesEl = document.getElementById('lives');
 const timeEl = document.getElementById('time');
 const messageEl = document.getElementById('message');
 const startButton = document.getElementById('startButton');
+const leftButton = document.getElementById('leftButton');
+const rightButton = document.getElementById('rightButton');
 
 const state = {
   running: false,
@@ -181,3 +183,24 @@ startButton.addEventListener('click', startGame);
 
 updateHud();
 setPlayerPosition((game.clientWidth - state.playerWidth) / 2);
+
+function bindTouchControl(button, key) {
+  const press = (event) => {
+    state.pressed.add(key);
+    event.preventDefault();
+  };
+  const release = (event) => {
+    state.pressed.delete(key);
+    event.preventDefault();
+  };
+
+  button.addEventListener('touchstart', press, { passive: false });
+  button.addEventListener('touchend', release);
+  button.addEventListener('touchcancel', release);
+  button.addEventListener('mousedown', press);
+  button.addEventListener('mouseup', release);
+  button.addEventListener('mouseleave', release);
+}
+
+bindTouchControl(leftButton, 'ArrowLeft');
+bindTouchControl(rightButton, 'ArrowRight');
