@@ -5,6 +5,8 @@ const livesEl = document.getElementById('lives');
 const timeEl = document.getElementById('time');
 const messageEl = document.getElementById('message');
 const startButton = document.getElementById('startButton');
+const leftButton = document.getElementById('leftButton');
+const rightButton = document.getElementById('rightButton');
 
 const state = {
   running: false,
@@ -12,7 +14,10 @@ const state = {
   lives: 3,
   timeLeft: 30,
   playerX: 0,
-  playerWidth: 80,
+  playerWidth: 92,
+  playerHeight: 44,
+  playerBottom: 16,
+  starSize: 26,
   pressed: new Set(),
   stars: [],
   spawnTimer: 0,
@@ -56,7 +61,7 @@ function endGame(reason) {
 function spawnStar() {
   const star = document.createElement('div');
   star.className = 'star';
-  const x = Math.random() * (game.clientWidth - 26);
+  const x = Math.random() * (game.clientWidth - state.starSize);
   star.style.transform = `translate(${x}px, -30px)`;
   game.appendChild(star);
   state.stars.push({ element: star, x, y: -30, speed: 140 + Math.random() * 120 });
@@ -87,7 +92,8 @@ function step(timestamp) {
     state.spawnTimer = 0;
   }
 
-  const playerY = game.clientHeight - 44;
+  const playerTop = game.clientHeight - state.playerBottom - state.playerHeight;
+  const playerBottom = playerTop + state.playerHeight;
   const caught = [];
   const missed = [];
 
@@ -95,8 +101,12 @@ function step(timestamp) {
     star.y += star.speed * delta;
     star.element.style.transform = `translate(${star.x}px, ${star.y}px)`;
 
-    const overlapsX = star.x + 26 >= state.playerX && star.x <= state.playerX + state.playerWidth;
-    const overlapsY = star.y + 26 >= playerY;
+    const starRight = star.x + state.starSize;
+    const starBottom = star.y + state.starSize;
+    const playerRight = state.playerX + state.playerWidth;
+
+    const overlapsX = starRight >= state.playerX && star.x <= playerRight;
+    const overlapsY = starBottom >= playerTop && star.y <= playerBottom;
 
     if (overlapsX && overlapsY) {
       caught.push(index);
@@ -173,3 +183,24 @@ startButton.addEventListener('click', startGame);
 
 updateHud();
 setPlayerPosition((game.clientWidth - state.playerWidth) / 2);
+
+function bindTouchControl(button, key) {
+  const press = (event) => {
+    state.pressed.add(key);
+    event.preventDefault();
+  };
+  const release = (event) => {
+    state.pressed.delete(key);
+    event.preventDefault();
+  };
+
+  button.addEventListener('touchstart', press, { passive: false });
+  button.addEventListener('touchend', release);
+  button.addEventListener('touchcancel', release);
+  button.addEventListener('mousedown', press);
+  button.addEventListener('mouseup', release);
+  button.addEventListener('mouseleave', release);
+}
+
+bindTouchControl(leftButton, 'ArrowLeft');
+bindTouchControl(rightButton, 'ArrowRight');
